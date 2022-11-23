@@ -8,7 +8,8 @@ import '../../recipe/recipe.dart';
 class HomePage extends StatelessWidget {
   HomePage({super.key});
 
-  final List<Recipe> _recipes = List<Recipe>.generate(3, (index) => Recipe('Recipe $index'));
+  final List<Recipe> _recipes =
+      List<Recipe>.generate(3, (index) => Recipe('Recipe $index'));
 
   @override
   Widget build(BuildContext context) {
