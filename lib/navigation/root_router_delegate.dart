@@ -2,6 +2,7 @@ import 'package:cook_book_app/navigation/router_cubit.dart';
 import 'package:cook_book_app/navigation/router_state.dart';
 import 'package:flutter/material.dart';
 
+import '../home/view/home_page.dart';
 import '../recipe/recipe.dart';
 
 class RootRouterDelegate extends RouterDelegate<RouterState> {
@@ -18,7 +19,7 @@ class RootRouterDelegate extends RouterDelegate<RouterState> {
     return Navigator(
       key: _navigatorKey,
       pages: List.from([
-        // _materialPage(valueKey: "homeScreen", child: const HomePage()),
+        _materialPage(valueKey: "homeScreen", child: HomePage()),
         ..._extraPages
       ]),
       onPopPage: _onPopPageParser,

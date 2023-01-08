@@ -1,22 +1,31 @@
+import 'package:cook_book_app/home/bloc/home_page_cubit.dart';
+import 'package:cook_book_app/navigation/router_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../recipe/recipe.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
 
-  // final List<Color> _recipes = [Colors.blue, Colors.brown, Colors.green];
-  final List<Color> _recipes =
-      List<Color>.generate(3, (index) => Colors.red.withAlpha(index));
+  final List<Recipe> _recipes = List<Recipe>.generate(3, (index) => Recipe('Recipe $index'));
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _homeAppBar(),
-      body: Column(
-        children: [_homeContent()],
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () => {},
+    RouterCubit routerCubit = context.read<RouterCubit>();
+    return BlocProvider(
+      create: (context) => HomePageCubit(routerCubit),
+      child: Scaffold(
+        appBar: _homeAppBar(),
+        body: Column(
+          children: [
+            _homeContent(),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.add),
+          onPressed: () => context.read<HomePageCubit>().createNewRecipe(),
+        ),
       ),
     );
   }
@@ -42,16 +51,16 @@ class HomePage extends StatelessWidget {
 }
 
 class _RecipeItem extends StatelessWidget {
-  _RecipeItem(this._itemColor);
+  const _RecipeItem(this.recipe);
 
-  final Color _itemColor;
+  final Recipe recipe;
   final String burger =
       'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YnVyZ2VyfGVufDB8fDB8fA%3D%3D&w=1000&q=80';
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () => context.read<HomePageCubit>().goToRecipe(recipe),
       child: Center(
         child: Card(
           elevation: 4,
@@ -61,7 +70,7 @@ class _RecipeItem extends StatelessWidget {
               children: [
                 _recipePhoto(),
                 Container(
-                  padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                  padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
                   child: _recipeHeader(),
                 )
               ],
@@ -97,7 +106,7 @@ class _RecipeItem extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _recipeTitle('Cheeseburger'),
+        _recipeTitle(recipe.name),
         _timeIndicator('30 min'),
       ],
     );
@@ -106,7 +115,7 @@ class _RecipeItem extends StatelessWidget {
   Widget _recipeTitle(String title) {
     return Text(
       title,
-      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 24),
+      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 24),
     );
   }
 
