@@ -26,7 +26,7 @@ class EditRecipePageState extends RouterState {
 }
 
 class RecipePageState extends RouterState {
-  const RecipePageState({required this.recipe});
+  const RecipePageState(this.recipe);
 
   final Recipe recipe;
 
