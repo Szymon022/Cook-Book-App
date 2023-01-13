@@ -45,7 +45,11 @@ class EditRecipePage extends StatelessWidget {
   Widget _content() {
     return SingleChildScrollView(
       child: Column(
-        children: [_photoPicker(), _forms(), const SizedBox(height: 16)],
+        children: [
+          _photoPicker(),
+          _forms(),
+          const SizedBox(height: 16),
+        ],
       ),
     );
   }
