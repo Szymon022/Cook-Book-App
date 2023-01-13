@@ -1,28 +1,41 @@
 import 'package:cook_book_app/recipe/view/text_form.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../bloc/edit_recipe_cubit.dart';
+import '../bloc/edit_recipe_view_state.dart';
+import '../recipe.dart';
 
 class EditRecipePage extends StatelessWidget {
-  const EditRecipePage({super.key});
+  const EditRecipePage({super.key, required this.recipe});
+
+  final Recipe? recipe;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _appBar(),
-      body: SingleChildScrollView(
-        child: _content(),
+    return BlocProvider(
+      create: (context) => EditRecipeCubit(context, recipe),
+      child: BlocBuilder<EditRecipeCubit, EditRecipeViewState>(
+        builder: (context, state) => Scaffold(
+          appBar: _appBar(context),
+          body: _content(),
+        ),
       ),
     );
   }
 
-  PreferredSizeWidget _appBar() {
+  PreferredSizeWidget _appBar(BuildContext context) {
+    var cubit = context.read<EditRecipeCubit>();
     return AppBar(
       leading: IconButton(
-        onPressed: () {},
+        onPressed: cubit.goBack,
         icon: const Icon(Icons.arrow_back_rounded),
       ),
       actions: [
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            cubit.saveRecipe(recipe!);
+          },
           icon: const Icon(Icons.check),
         ),
       ],
@@ -30,11 +43,10 @@ class EditRecipePage extends StatelessWidget {
   }
 
   Widget _content() {
-    return Column(
-      children: [
-        _photoPicker(),
-        _forms(),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [_photoPicker(), _forms(), const SizedBox(height: 16)],
+      ),
     );
   }
 
@@ -82,18 +94,21 @@ class EditRecipePage extends StatelessWidget {
   }
 
   Widget _titleForm() {
-    return const TextForm(hintText: 'Recipe title');
+    return TextForm(
+      hintText: 'Recipe title',
+      initialValue: recipe?.name,
+    );
   }
 
   Widget _timeForm() {
-    return const Expanded(
-      child: TextForm(hintText: 'Recipe time'),
+    return Expanded(
+      child: TextForm(hintText: 'Recipe time', initialValue: recipe?.time),
     );
   }
 
   Widget _energyForm() {
-    return const Expanded(
-      child: TextForm(hintText: 'Kcals'),
+    return Expanded(
+      child: TextForm(hintText: 'Kcals', initialValue: recipe?.energy),
     );
   }
 }

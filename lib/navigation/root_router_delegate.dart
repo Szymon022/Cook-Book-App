@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../home/view/home_page.dart';
 import '../recipe/recipe.dart';
+import '../recipe/view/edit_recipe_page.dart';
 
 class RootRouterDelegate extends RouterDelegate<RouterState> {
   final GlobalKey<NavigatorState> _navigatorKey;
@@ -74,8 +75,8 @@ class RootRouterDelegate extends RouterDelegate<RouterState> {
     if (_routerCubit.state is EditRecipePageState) {
       recipe = (_routerCubit.state as EditRecipePageState).recipe;
       return [
-        /*_materialPage(
-            valueKey: "editRecipePage", child: EditRecipePage(recipe: recipe)),*/
+        _materialPage(
+            valueKey: "editRecipePage", child: EditRecipePage(recipe: recipe)),
       ];
     }
 
