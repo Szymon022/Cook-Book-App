@@ -3,8 +3,6 @@ import 'package:cook_book_app/navigation/router_cubit.dart';
 import 'package:cook_book_app/navigation/router_state.dart';
 import 'package:cook_book_app/recipe/recipe.dart';
 
-class MockRouterCubit extends MockCubit<RouterState> implements RouterCubit {}
-
 void main() {
   Recipe recipe = const Recipe('Recipe 1', '10 min', '300 kcals');
 
