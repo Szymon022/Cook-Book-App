@@ -1,3 +1,4 @@
+import 'package:cook_book_app/navigation/router_cubit.dart';
 import 'package:cook_book_app/recipe/view/text_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,8 +14,9 @@ class EditRecipePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    RouterCubit routerCubit = context.read<RouterCubit>();
     return BlocProvider(
-      create: (context) => EditRecipeCubit(context, recipe),
+      create: (context) => EditRecipeCubit(routerCubit, recipe),
       child: BlocBuilder<EditRecipeCubit, EditRecipeViewState>(
         builder: (context, state) => Scaffold(
           appBar: _appBar(context),
