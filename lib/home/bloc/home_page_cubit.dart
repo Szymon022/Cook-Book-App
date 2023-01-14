@@ -1,11 +1,14 @@
 import 'package:bloc/bloc.dart';
 import 'package:cook_book_app/navigation/router_cubit.dart';
 import 'package:cook_book_app/recipe/recipe.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'home_page_view_state.dart';
 
 class HomePageCubit extends Cubit<HomePageViewState> {
-  HomePageCubit(this._routerCubit) : super(const HomePageViewState([]));
+  HomePageCubit(RouterCubit routerCubit)
+      : _routerCubit = routerCubit,
+        super(const HomePageViewState([]));
 
   final RouterCubit _routerCubit;
 
