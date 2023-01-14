@@ -1,14 +1,9 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:cook_book_app/navigation/router_cubit.dart';
-import 'package:cook_book_app/navigation/router_state.dart';
 import 'package:cook_book_app/recipe/bloc/edit_recipe_cubit.dart';
 import 'package:cook_book_app/recipe/recipe.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:mocktail/mocktail.dart';
 
-class MockRouterCubit extends MockCubit<RouterState> implements RouterCubit {}
-
-class MockBuildContext extends Mock implements BuildContext {}
+import '../../mock/mock_router_cubit.dart';
 
 void main() {
   Recipe recipe = const Recipe('Recipe 1', '10 min', '300 kcals');
