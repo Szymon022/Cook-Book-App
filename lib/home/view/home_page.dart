@@ -45,10 +45,10 @@ class HomePage extends StatelessWidget {
       child: ListView.builder(
         itemCount: _recipes.length + 1,
         itemBuilder: (context, index) {
-          Recipe recipe = _recipes[index];
           if (index == _recipes.length) {
             return const SizedBox(height: 80);
           } else {
+            Recipe recipe = _recipes[index];
             return _RecipeItem(
               recipe: recipe,
               onRecipeTap: () =>
