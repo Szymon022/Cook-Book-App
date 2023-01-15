@@ -12,6 +12,7 @@ void main() {
   blocTest('calls RouterCubit popExtra on goBack method',
       build: () => EditRecipeCubit(routerCubit, recipe),
       act: (cubit) => cubit.goBack(),
+      expect: () => [],
       verify: (_) {
         verify(() => routerCubit.popExtra()).called(1);
       });
@@ -19,6 +20,7 @@ void main() {
   blocTest('calls RouterCubit popExtra on saveRecipe method',
       build: () => EditRecipeCubit(routerCubit, recipe),
       act: (cubit) => cubit.saveRecipe(recipe),
+      expect: () => [],
       verify: (_) {
         verify(() => routerCubit.popExtra()).called(1);
       });

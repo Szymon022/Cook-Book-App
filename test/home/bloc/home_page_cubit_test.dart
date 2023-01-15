@@ -15,6 +15,7 @@ void main() {
     'calls RouterCubit navigateToRecipe on goToRecipe',
     build: () => HomePageCubit(routerCubit),
     act: (cubit) => cubit.goToRecipe(recipe),
+    expect: () => [],
     verify: (_) => verify(() => routerCubit.navigateToRecipe(recipe)).called(1),
   );
 
@@ -22,6 +23,7 @@ void main() {
     'calls RouterCubit navigateToEditRecipe on createNewRecipe',
     build: () => HomePageCubit(routerCubit),
     act: (cubit) => cubit.createNewRecipe(),
+    expect: () => [],
     verify: (_) => verify(() => routerCubit.navigateToEditRecipe()).called(1),
   );
 
@@ -29,6 +31,7 @@ void main() {
     'calls RouterCubit navigateToEditRecipe on editRecipe',
     build: () => HomePageCubit(routerCubit),
     act: (cubit) => cubit.editRecipe(recipe),
+    expect: () => [],
     verify: (_) =>
         verify(() => routerCubit.navigateToEditRecipe(recipe)).called(1),
   );
@@ -36,6 +39,7 @@ void main() {
   blocTest(
     'sets HomePageViewState([]) as initial state',
     build: () => HomePageCubit(routerCubit),
+    expect: () => [],
     verify: (cubit) => {cubit.state == const HomePageViewState([])},
   );
 }
