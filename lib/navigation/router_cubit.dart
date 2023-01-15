@@ -15,7 +15,7 @@ class RouterCubit extends Cubit<RouterState> {
   }
 
   void navigateToRecipe(Recipe recipe) {
-    emit(EditRecipePageState(recipe));
+    emit(RecipePageState(recipe));
   }
 
   void popExtra() {
