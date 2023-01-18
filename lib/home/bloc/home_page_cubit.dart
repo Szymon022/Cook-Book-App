@@ -7,9 +7,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'home_page_view_state.dart';
 
 class HomePageCubit extends Cubit<HomePageViewState> {
-  HomePageCubit(RouterCubit routerCubit)
+  HomePageCubit(RouterCubit routerCubit, RecipeRepository recipeRepository)
       : _routerCubit = routerCubit,
-        super(const HomePageViewState([]));
+        super(HomePageViewState(recipeRepository.getAllRecipes()));
 
   final RouterCubit _routerCubit;
 
