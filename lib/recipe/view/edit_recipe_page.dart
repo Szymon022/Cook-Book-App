@@ -1,5 +1,6 @@
 import 'package:cook_book_app/navigation/router_cubit.dart';
 import 'package:cook_book_app/recipe/view/text_form.dart';
+import 'package:cook_book_app/storage/recipe_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -8,15 +9,20 @@ import '../bloc/edit_recipe_cubit.dart';
 import '../bloc/edit_recipe_view_state.dart';
 
 class EditRecipePage extends StatelessWidget {
-  const EditRecipePage({super.key, required this.recipe});
+  EditRecipePage({super.key, this.recipe});
 
   final Recipe? recipe;
+  String _recipeName = "";
+  String _preparationTime = "";
+  String _energy = "";
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     RouterCubit routerCubit = context.read<RouterCubit>();
     return BlocProvider(
-      create: (context) => EditRecipeCubit(routerCubit, recipe),
+      create: (context) =>
+          EditRecipeCubit(routerCubit, RecipeRepositoryImpl(), recipe),
       child: BlocBuilder<EditRecipeCubit, EditRecipeViewState>(
         builder: (context, state) => Scaffold(
           appBar: _appBar(context),
@@ -36,7 +42,7 @@ class EditRecipePage extends StatelessWidget {
       actions: [
         IconButton(
           onPressed: () {
-            cubit.saveRecipe(recipe!);
+            cubit.saveRecipe(Recipe(_recipeName, _preparationTime, _energy));
           },
           icon: const Icon(Icons.check),
         ),
@@ -82,25 +88,29 @@ class EditRecipePage extends StatelessWidget {
   Widget _forms() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
-          const SizedBox(height: 8),
-          _titleForm(),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              _timeForm(),
-              const SizedBox(width: 16),
-              _energyForm(),
-            ],
-          )
-        ],
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            const SizedBox(height: 8),
+            _titleForm(),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                _timeForm(),
+                const SizedBox(width: 16),
+                _energyForm(),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
 
   Widget _titleForm() {
     return TextForm(
+      onChanged: (name) => _recipeName = name,
       hintText: 'Recipe title',
       initialValue: recipe?.name,
     );
@@ -108,13 +118,21 @@ class EditRecipePage extends StatelessWidget {
 
   Widget _timeForm() {
     return Expanded(
-      child: TextForm(hintText: 'Recipe time', initialValue: recipe?.time),
+      child: TextForm(
+        onChanged: (preparationTime) => _preparationTime = preparationTime,
+        hintText: 'Recipe time',
+        initialValue: recipe?.time,
+      ),
     );
   }
 
   Widget _energyForm() {
     return Expanded(
-      child: TextForm(hintText: 'Kcals', initialValue: recipe?.energy),
+      child: TextForm(
+        onChanged: (energy) => _energy = energy,
+        hintText: 'Kcals',
+        initialValue: recipe?.energy,
+      ),
     );
   }
 }
