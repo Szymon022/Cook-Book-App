@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../recipe.dart';
+import '../../storage/entity/recipe.dart';
 
 class RecipePageViewState extends Equatable {
   const RecipePageViewState(this.recipe);
