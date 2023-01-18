@@ -1,30 +1,27 @@
 import 'package:cook_book_app/home/bloc/home_page_cubit.dart';
 import 'package:cook_book_app/navigation/router_cubit.dart';
+import 'package:cook_book_app/storage/recipe_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../recipe/recipe.dart';
+import '../../storage/entity/recipe.dart';
 import '../bloc/home_page_view_state.dart';
 
 class HomePage extends StatelessWidget {
-  HomePage({super.key});
-
-  final List<Recipe> _recipes = List<Recipe>.generate(
-      3,
-      (index) =>
-          Recipe('Recipe $index', '${index + 1}0 min', '${index + 1}00 kcals'));
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    RouterCubit routerCubit = context.read<RouterCubit>();
+    final RouterCubit routerCubit = context.read<RouterCubit>();
+    final RecipeRepository recipeRepository = RecipeRepositoryImpl();
     return BlocProvider(
-      create: (context) => HomePageCubit(routerCubit),
+      create: (context) => HomePageCubit(routerCubit, recipeRepository),
       child: BlocBuilder<HomePageCubit, HomePageViewState>(
         builder: (context, state) => Scaffold(
           appBar: _homeAppBar(),
           body: Column(
             children: [
-              _homeContent(),
+              _homeContent(state.recipes),
             ],
           ),
           floatingActionButton: FloatingActionButton(
@@ -40,15 +37,15 @@ class HomePage extends StatelessWidget {
     return AppBar();
   }
 
-  Widget _homeContent() {
+  Widget _homeContent(List<Recipe> recipes) {
     return Expanded(
       child: ListView.builder(
-        itemCount: _recipes.length + 1,
+        itemCount: recipes.length + 1,
         itemBuilder: (context, index) {
-          if (index == _recipes.length) {
+          if (index == recipes.length) {
             return const SizedBox(height: 80);
           } else {
-            Recipe recipe = _recipes[index];
+            Recipe recipe = recipes[index];
             return _RecipeItem(
               recipe: recipe,
               onRecipeTap: () =>

@@ -1,6 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:cook_book_app/recipe/bloc/edit_recipe_cubit.dart';
-import 'package:cook_book_app/recipe/recipe.dart';
+import 'package:cook_book_app/storage/entity/recipe.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../mock/mock_router_cubit.dart';

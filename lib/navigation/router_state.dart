@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../recipe/recipe.dart';
+import '../storage/entity/recipe.dart';
 
 abstract class RouterState extends Equatable {
   const RouterState();

@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:cook_book_app/navigation/router_cubit.dart';
 import 'package:cook_book_app/recipe/bloc/recipe_page_view_state.dart';
 
-import '../recipe.dart';
+import '../../storage/entity/recipe.dart';
 
 class RecipeCubit extends Cubit<RecipePageViewState> {
   RecipeCubit(this.routerCubit, Recipe recipe)
