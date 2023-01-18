@@ -4,7 +4,7 @@ import 'package:cook_book_app/recipe/bloc/recipe_page_view_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../recipe.dart';
+import '../../storage/entity/recipe.dart';
 
 class RecipePage extends StatelessWidget {
   const RecipePage(this.recipe, {Key? key}) : super(key: key);
