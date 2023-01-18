@@ -3,6 +3,7 @@ import 'package:cook_book_app/home/bloc/home_page_cubit.dart';
 import 'package:cook_book_app/home/bloc/home_page_view_state.dart';
 import 'package:cook_book_app/navigation/router_cubit.dart';
 import 'package:cook_book_app/storage/entity/recipe.dart';
+import 'package:cook_book_app/storage/recipe_repository.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../mock/mock_router_cubit.dart';
@@ -10,10 +11,18 @@ import '../../mock/mock_router_cubit.dart';
 void main() {
   Recipe recipe = const Recipe("Recipe 1", '30 min', '100 kcal');
   RouterCubit routerCubit = MockRouterCubit();
+  RecipeRepository recipeRepository = MockRecipeRepository();
+  List<Recipe> recipes = const [
+    Recipe("Recipe 1", "10min", "100 kcals"),
+    Recipe("Recipe 2", "20min", "200 kcals"),
+    Recipe("Recipe 3", "30min", "300 kcals"),
+  ];
+  when(() => recipeRepository.getAllRecipes()).thenAnswer((_) => recipes);
 
   blocTest(
     'calls RouterCubit navigateToRecipe on goToRecipe',
-    build: () => HomePageCubit(routerCubit),
+    setUp: () => clearInteractions(recipeRepository),
+    build: () => HomePageCubit(routerCubit, recipeRepository),
     act: (cubit) => cubit.goToRecipe(recipe),
     expect: () => [],
     verify: (_) => verify(() => routerCubit.navigateToRecipe(recipe)).called(1),
@@ -21,7 +30,8 @@ void main() {
 
   blocTest(
     'calls RouterCubit navigateToEditRecipe on createNewRecipe',
-    build: () => HomePageCubit(routerCubit),
+    setUp: () => clearInteractions(recipeRepository),
+    build: () => HomePageCubit(routerCubit, recipeRepository),
     act: (cubit) => cubit.createNewRecipe(),
     expect: () => [],
     verify: (_) => verify(() => routerCubit.navigateToEditRecipe()).called(1),
@@ -29,7 +39,8 @@ void main() {
 
   blocTest(
     'calls RouterCubit navigateToEditRecipe on editRecipe',
-    build: () => HomePageCubit(routerCubit),
+    setUp: () => clearInteractions(recipeRepository),
+    build: () => HomePageCubit(routerCubit, recipeRepository),
     act: (cubit) => cubit.editRecipe(recipe),
     expect: () => [],
     verify: (_) =>
@@ -37,9 +48,34 @@ void main() {
   );
 
   blocTest(
-    'sets HomePageViewState([]) as initial state',
-    build: () => HomePageCubit(routerCubit),
+    'sets HomePageViewState([]) as initial state when no recipes available',
+    setUp: () {
+      clearInteractions(recipeRepository);
+      when(() => recipeRepository.getAllRecipes()).thenAnswer((_) => []);
+    },
+    build: () => HomePageCubit(routerCubit, recipeRepository),
     expect: () => [],
     verify: (cubit) => {cubit.state == const HomePageViewState([])},
+  );
+
+  blocTest(
+    'sets HomePageViewState(List<Recipe>) as initial state when recipes available',
+    setUp: () {
+      clearInteractions(recipeRepository);
+      when(() => recipeRepository.getAllRecipes()).thenAnswer((_) => recipes);
+    },
+    build: () => HomePageCubit(routerCubit, recipeRepository),
+    expect: () => [],
+    verify: (cubit) => {cubit.state == HomePageViewState(recipes)},
+  );
+
+  blocTest(
+    'calls RecipeRepository::getAllRecipes on init',
+    setUp: () => clearInteractions(recipeRepository),
+    build: () => HomePageCubit(routerCubit, recipeRepository),
+    expect: () => [],
+    verify: (cubit) {
+      verify(() => recipeRepository.getAllRecipes()).called(1);
+    },
   );
 }
