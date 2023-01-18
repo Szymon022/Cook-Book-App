@@ -3,10 +3,10 @@ import 'package:equatable/equatable.dart';
 import '../../storage/entity/recipe.dart';
 
 class HomePageViewState extends Equatable {
-  const HomePageViewState(List<Recipe> recipes) : _recipes = recipes;
+  const HomePageViewState(this.recipes);
 
-  final List<Recipe>? _recipes;
+  final List<Recipe> recipes;
 
   @override
-  List<Object?> get props => [_recipes];
+  List<Object?> get props => [recipes];
 }
