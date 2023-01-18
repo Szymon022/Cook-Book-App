@@ -17,18 +17,22 @@ class HomePage extends StatelessWidget {
     return BlocProvider(
       create: (context) => HomePageCubit(routerCubit, recipeRepository),
       child: BlocBuilder<HomePageCubit, HomePageViewState>(
-        builder: (context, state) => Scaffold(
-          appBar: _homeAppBar(),
-          body: Column(
-            children: [
-              _homeContent(state.recipes),
-            ],
-          ),
-          floatingActionButton: FloatingActionButton(
-            child: const Icon(Icons.add),
-            onPressed: () => context.read<HomePageCubit>().createNewRecipe(),
-          ),
-        ),
+        builder: (context, state) {
+          // I guess this is really bad, but cannot find another way to load new recipes
+          BlocProvider.of<HomePageCubit>(context).loadRecipes();
+          return Scaffold(
+            appBar: _homeAppBar(),
+            body: Column(
+              children: [
+                _homeContent(state.recipes),
+              ],
+            ),
+            floatingActionButton: FloatingActionButton(
+              child: const Icon(Icons.add),
+              onPressed: () => context.read<HomePageCubit>().createNewRecipe(),
+            ),
+          );
+        },
       ),
     );
   }
