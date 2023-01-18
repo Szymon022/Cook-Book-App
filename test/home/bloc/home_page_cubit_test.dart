@@ -2,7 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:cook_book_app/home/bloc/home_page_cubit.dart';
 import 'package:cook_book_app/home/bloc/home_page_view_state.dart';
 import 'package:cook_book_app/navigation/router_cubit.dart';
-import 'package:cook_book_app/recipe/recipe.dart';
+import 'package:cook_book_app/storage/entity/recipe.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../mock/mock_router_cubit.dart';

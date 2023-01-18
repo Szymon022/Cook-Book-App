@@ -1,6 +1,6 @@
 import 'dart:core';
 
-import '../recipe.dart';
+import '../../storage/entity/recipe.dart';
 
 class EditRecipeViewState {
   EditRecipeViewState(Recipe? recipe)

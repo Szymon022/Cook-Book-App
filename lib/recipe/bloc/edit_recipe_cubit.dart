@@ -1,7 +1,7 @@
 import 'package:cook_book_app/navigation/router_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../recipe.dart';
+import '../../storage/entity/recipe.dart';
 import 'edit_recipe_view_state.dart';
 
 class EditRecipeCubit extends Cubit<EditRecipeViewState> {

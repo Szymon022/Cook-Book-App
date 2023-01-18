@@ -3,8 +3,8 @@ import 'package:cook_book_app/navigation/router_state.dart';
 import 'package:flutter/material.dart';
 
 import '../home/view/home_page.dart';
-import '../recipe/recipe.dart';
 import '../recipe/view/edit_recipe_page.dart';
+import '../storage/entity/recipe.dart';
 import '../recipe/view/recipe_page.dart';
 
 class RootRouterDelegate extends RouterDelegate<RouterState> {
