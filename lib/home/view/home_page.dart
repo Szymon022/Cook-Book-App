@@ -67,8 +67,6 @@ class _RecipeItem extends StatelessWidget {
 
   final Recipe recipe;
   final void Function() onRecipeTap;
-  final String burger =
-      'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YnVyZ2VyfGVufDB8fDB8fA%3D%3D&w=1000&q=80';
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +96,7 @@ class _RecipeItem extends StatelessWidget {
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
       child: Image(
-        image: NetworkImage(burger),
+        image: NetworkImage(recipe.imageUrl),
         height: 300,
         alignment: Alignment.topCenter,
       ),
