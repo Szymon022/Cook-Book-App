@@ -7,7 +7,7 @@ import 'package:cook_book_app/storage/recipe_repository.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../mock/mock_router_cubit.dart';
-import '../../utils/stubs.dart';
+import '../../utils/stub_recipe.dart';
 
 void main() {
   RouterCubit routerCubit = MockRouterCubit();
