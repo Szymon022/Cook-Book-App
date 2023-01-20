@@ -4,7 +4,10 @@ part 'recipe.g.dart';
 
 @HiveType(typeId: 1)
 class Recipe {
-  const Recipe(this.name, this.time, this.energy);
+  const Recipe(this.uuid, this.name, this.time, this.energy, this.imageUrl);
+
+  @HiveField(3)
+  final String uuid;
 
   @HiveField(0)
   final String name;
@@ -14,4 +17,7 @@ class Recipe {
 
   @HiveField(2)
   final String energy;
+
+  @HiveField(4)
+  final String imageUrl;
 }
