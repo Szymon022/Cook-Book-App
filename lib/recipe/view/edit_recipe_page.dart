@@ -3,18 +3,28 @@ import 'package:cook_book_app/recipe/view/text_form.dart';
 import 'package:cook_book_app/storage/recipe_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../storage/entity/recipe.dart';
 import '../bloc/edit_recipe_cubit.dart';
 import '../bloc/edit_recipe_view_state.dart';
 
 class EditRecipePage extends StatelessWidget {
-  EditRecipePage({super.key, this.recipe});
+  EditRecipePage({super.key, this.recipe}) {
+    _uuid = recipe?.uuid ?? const Uuid().v1();
+    _recipeName = recipe?.name ?? "";
+    _preparationTime = recipe?.time ?? "";
+    _energy = recipe?.energy ?? "";
+    _imageUrl = recipe?.imageUrl ??
+        'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YnVyZ2VyfGVufDB8fDB8fA%3D%3D&w=1000&q=80';
+  }
 
   final Recipe? recipe;
-  String _recipeName = "";
-  String _preparationTime = "";
-  String _energy = "";
+  late String _uuid;
+  late String _recipeName;
+  late String _preparationTime;
+  late String _energy;
+  late String _imageUrl;
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -42,7 +52,13 @@ class EditRecipePage extends StatelessWidget {
       actions: [
         IconButton(
           onPressed: () {
-            cubit.saveRecipe(Recipe(_recipeName, _preparationTime, _energy));
+            if (recipe != null) {
+              cubit.updateRecipe(Recipe(recipe!.uuid, _recipeName,
+                  _preparationTime, _energy, _imageUrl));
+            } else {
+              cubit.saveRecipe(Recipe(
+                  _uuid, _recipeName, _preparationTime, _energy, _imageUrl));
+            }
           },
           icon: const Icon(Icons.check),
         ),

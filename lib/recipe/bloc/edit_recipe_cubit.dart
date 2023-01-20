@@ -16,9 +16,13 @@ class EditRecipeCubit extends Cubit<EditRecipeViewState> {
   final RecipeRepository _recipeRepository;
 
   void saveRecipe(Recipe recipe) {
-    // save recipe here
     _recipeRepository.saveRecipe(recipe);
-    _routerCubit.popExtra();
+    goBack();
+  }
+
+  void updateRecipe(Recipe recipe) {
+    _recipeRepository.updateRecipe(recipe.uuid, recipe);
+    goBack();
   }
 
   void goBack() => _routerCubit.popExtra();
