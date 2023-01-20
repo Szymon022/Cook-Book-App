@@ -6,9 +6,10 @@ import 'package:cook_book_app/storage/entity/recipe.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../mock/mock_router_cubit.dart';
+import '../../utils/stubs.dart';
 
 void main() {
-  Recipe recipe = const Recipe('Recipe 1', '30 min', '100 kcals');
+  Recipe recipe = StubRecipe();
   RouterCubit routerCubit = MockRouterCubit();
 
   blocTest(
