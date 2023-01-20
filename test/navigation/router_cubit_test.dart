@@ -3,7 +3,7 @@ import 'package:cook_book_app/navigation/router_cubit.dart';
 import 'package:cook_book_app/navigation/router_state.dart';
 import 'package:cook_book_app/storage/entity/recipe.dart';
 
-import '../utils/stubs.dart';
+import '../utils/stub_recipe.dart';
 
 void main() {
   Recipe recipe = StubRecipe();
