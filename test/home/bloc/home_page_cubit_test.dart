@@ -6,7 +6,7 @@ import 'package:cook_book_app/storage/entity/recipe.dart';
 import 'package:cook_book_app/storage/recipe_repository.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../../mock/mock_router_cubit.dart';
+import '../../mock/mocks.dart';
 import '../../utils/stub_recipe.dart';
 
 void main() {
