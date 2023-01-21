@@ -62,13 +62,14 @@ class EditRecipePage extends StatelessWidget {
         if (state is ShouldNotShowCamera)
           IconButton(
             onPressed: () {
-              if (recipe != null) {
-                cubit.updateRecipe(Recipe(recipe!.uuid, _recipeName,
-                    _preparationTime, _energy, _imagePath, _description));
-              } else {
-                cubit.saveRecipe(Recipe(_uuid, _recipeName, _preparationTime,
-                    _energy, _imagePath, _description));
-              }
+              // if (recipe != null) {
+              //   cubit.updateRecipe(Recipe(recipe!.uuid, _recipeName,
+              //       _preparationTime, _energy, _imagePath, _description));
+              // } else {
+              //   cubit.saveRecipe(Recipe(_uuid, _recipeName, _preparationTime,
+              //       _energy, _imagePath, _description));
+              // }
+              _formKey.currentState!.validate();
             },
             icon: const Icon(Icons.check),
           ),
@@ -140,6 +141,7 @@ class EditRecipePage extends StatelessWidget {
             _titleForm(),
             const SizedBox(height: 8),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _timeForm(),
                 const SizedBox(width: 16),
@@ -162,6 +164,13 @@ class EditRecipePage extends StatelessWidget {
         hintText: "Recipe name",
       ),
       initialValue: _recipeName,
+      validator: (title) {
+        RegExp wordsAndSpacesOnlyRegexp = RegExp(r'^[a-zA-Z\s\D]+$');
+        if (title == null || !wordsAndSpacesOnlyRegexp.hasMatch(title)) {
+          return 'Name must contain only words separated by spaces';
+        }
+        return null;
+      },
     );
   }
 
@@ -174,6 +183,13 @@ class EditRecipePage extends StatelessWidget {
           hintText: "Prep time",
         ),
         initialValue: _preparationTime,
+        validator: (time) {
+          RegExp timeRegexp = RegExp(r'^[1-9]+[0-9]*(\s)+(min|h)$');
+          if (time == null || !timeRegexp.hasMatch(time)) {
+            return 'Number + min/h';
+          }
+          return null;
+        },
       ),
     );
   }
@@ -184,9 +200,16 @@ class EditRecipePage extends StatelessWidget {
         onChanged: (energy) => _energy = energy,
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
-          hintText: "Kcals",
+          hintText: "Kcal",
         ),
         initialValue: _energy,
+        validator: (energy) {
+          RegExp energyRegexp = RegExp(r'^[1-9]+[0-9]*(\s)+(kcal)$');
+          if (energy == null || !energyRegexp.hasMatch(energy)) {
+            return 'Number + kcal';
+          }
+          return null;
+        },
       ),
     );
   }
