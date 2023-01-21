@@ -7,17 +7,12 @@ abstract class RecipeRepository {
 
   void saveRecipe(Recipe recipe);
 
-  void deleteRecipe(Recipe recipe);
-
   void updateRecipe(String uuid, Recipe recipe);
+
+  void deleteRecipe(String uuid);
 }
 
 class RecipeRepositoryImpl implements RecipeRepository {
-  @override
-  void deleteRecipe(Recipe recipe) {
-    CookBookHive.recipesBox.delete(recipe.uuid);
-  }
-
   @override
   List<Recipe> getAllRecipes() {
     return CookBookHive.recipesBox.values.toList().cast<Recipe>();
@@ -31,5 +26,10 @@ class RecipeRepositoryImpl implements RecipeRepository {
   @override
   void updateRecipe(String uuid, Recipe recipe) {
     CookBookHive.recipesBox.put(uuid, recipe);
+  }
+
+  @override
+  void deleteRecipe(String uuid) {
+    CookBookHive.recipesBox.delete(uuid);
   }
 }
