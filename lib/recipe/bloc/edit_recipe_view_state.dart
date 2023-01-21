@@ -1,7 +1,15 @@
 import 'dart:core';
 
-abstract class EditRecipeViewState {}
+import 'package:equatable/equatable.dart';
 
-class ShouldShowCamera extends EditRecipeViewState {}
+abstract class EditRecipeViewState extends Equatable {}
 
-class ShouldNotShowCamera extends EditRecipeViewState {}
+class ShouldShowCamera extends EditRecipeViewState {
+  @override
+  List<Object?> get props => [];
+}
+
+class ShouldNotShowCamera extends EditRecipeViewState {
+  @override
+  List<Object?> get props => [];
+}
