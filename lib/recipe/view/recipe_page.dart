@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cook_book_app/navigation/router_cubit.dart';
 import 'package:cook_book_app/recipe/bloc/recipe_cubit.dart';
 import 'package:cook_book_app/recipe/bloc/recipe_page_view_state.dart';
@@ -56,17 +58,15 @@ class RecipePage extends StatelessWidget {
   }
 
   Widget _recipePhoto() {
-    const String burger =
-        'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YnVyZ2VyfGVufDB8fDB8fA%3D%3D&w=1000&q=80';
-
     return Align(
       alignment: Alignment.topCenter,
       child: Container(
         width: double.infinity,
         color: Colors.black,
-        child: const Image(
-          image: NetworkImage(burger),
+        child: Image.file(
+          File(recipe.imagePath),
           height: 300,
+          fit: BoxFit.contain,
         ),
       ),
     );

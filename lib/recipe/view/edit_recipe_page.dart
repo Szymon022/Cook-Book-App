@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:camera_bloc/camera_bloc.dart';
 import 'package:cook_book_app/navigation/router_cubit.dart';
 import 'package:cook_book_app/storage/recipe_repository.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +17,7 @@ class EditRecipePage extends StatelessWidget {
     _recipeName = recipe?.name ?? "";
     _preparationTime = recipe?.time ?? "";
     _energy = recipe?.energy ?? "";
-    _imageUrl = recipe?.imageUrl ??
-        'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YnVyZ2VyfGVufDB8fDB8fA%3D%3D&w=1000&q=80';
+    _imagePath = recipe?.imagePath ?? "";
     _description = recipe?.description ?? "";
   }
 
@@ -24,7 +26,7 @@ class EditRecipePage extends StatelessWidget {
   late String _recipeName;
   late String _preparationTime;
   late String _energy;
-  late String _imageUrl;
+  late String _imagePath;
   late String _description;
   final _formKey = GlobalKey<FormState>();
 
@@ -36,66 +38,90 @@ class EditRecipePage extends StatelessWidget {
           EditRecipeCubit(routerCubit, RecipeRepositoryImpl(), recipe),
       child: BlocBuilder<EditRecipeCubit, EditRecipeViewState>(
         builder: (context, state) => Scaffold(
-          appBar: _appBar(context),
-          body: _content(),
+          appBar: _appBar(context, state),
+          body: _content(context, state),
         ),
       ),
     );
   }
 
-  PreferredSizeWidget _appBar(BuildContext context) {
+  PreferredSizeWidget _appBar(BuildContext context, EditRecipeViewState state) {
     var cubit = context.read<EditRecipeCubit>();
     return AppBar(
       leading: IconButton(
-        onPressed: cubit.goBack,
+        onPressed: () {
+          if (state is ShouldNotShowCamera) {
+            cubit.goBack();
+          } else {
+            cubit.onTakingPictureFinished();
+          }
+        },
         icon: const Icon(Icons.arrow_back_rounded),
       ),
       actions: [
-        IconButton(
-          onPressed: () {
-            if (recipe != null) {
-              cubit.updateRecipe(Recipe(recipe!.uuid, _recipeName,
-                  _preparationTime, _energy, _imageUrl, _description));
-            } else {
-              cubit.saveRecipe(Recipe(_uuid, _recipeName, _preparationTime,
-                  _energy, _imageUrl, _description));
-            }
-          },
-          icon: const Icon(Icons.check),
-        ),
+        if (state is ShouldNotShowCamera)
+          IconButton(
+            onPressed: () {
+              if (recipe != null) {
+                cubit.updateRecipe(Recipe(recipe!.uuid, _recipeName,
+                    _preparationTime, _energy, _imagePath, _description));
+              } else {
+                cubit.saveRecipe(Recipe(_uuid, _recipeName, _preparationTime,
+                    _energy, _imagePath, _description));
+              }
+            },
+            icon: const Icon(Icons.check),
+          ),
       ],
     );
   }
 
-  Widget _content() {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          _photoPicker(),
-          _forms(),
-          const SizedBox(height: 16),
-        ],
-      ),
-    );
+  Widget _content(BuildContext context, EditRecipeViewState state) {
+    if (state is ShouldNotShowCamera) {
+      return SingleChildScrollView(
+        child: Column(
+          children: [
+            _photoPicker(context),
+            _forms(),
+            const SizedBox(height: 16),
+          ],
+        ),
+      );
+    } else {
+      return CameraScreen(onTakePhoto: (file) {
+        _imagePath = file.path;
+        BlocProvider.of<EditRecipeCubit>(context).onTakingPictureFinished();
+      });
+    }
   }
 
-  Widget _photoPicker() {
+  Widget _photoPicker(BuildContext context) {
+    Widget content;
+    if (_imagePath == "") {
+      content = const Icon(
+        Icons.camera_alt_outlined,
+        color: Colors.white,
+        size: 120,
+      );
+    } else {
+      content = Image.file(
+        File(_imagePath),
+        fit: BoxFit.contain,
+      );
+    }
+
     return Align(
       alignment: Alignment.topCenter,
       child: InkWell(
-        onTap: () {},
+        onTap: BlocProvider.of<EditRecipeCubit>(context).onTakingPictureStarted,
         child: Container(
           padding: const EdgeInsets.only(bottom: 16),
-          height: 300,
           width: double.infinity,
+          height: 300,
           color: Colors.black,
-          child: const Align(
+          child: Align(
             alignment: Alignment.center,
-            child: Icon(
-              Icons.camera_alt_outlined,
-              color: Colors.white,
-              size: 120,
-            ),
+            child: content,
           ),
         ),
       ),
@@ -134,7 +160,7 @@ class EditRecipePage extends StatelessWidget {
         border: OutlineInputBorder(),
         hintText: "Recipe name",
       ),
-      initialValue: recipe?.name,
+      initialValue: _recipeName,
     );
   }
 
@@ -146,7 +172,7 @@ class EditRecipePage extends StatelessWidget {
           border: OutlineInputBorder(),
           hintText: "Prep time",
         ),
-        initialValue: recipe?.time,
+        initialValue: _preparationTime,
       ),
     );
   }
@@ -159,7 +185,7 @@ class EditRecipePage extends StatelessWidget {
           border: OutlineInputBorder(),
           hintText: "Kcals",
         ),
-        initialValue: recipe?.energy,
+        initialValue: _energy,
       ),
     );
   }

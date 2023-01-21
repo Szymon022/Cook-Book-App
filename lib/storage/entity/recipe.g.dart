@@ -39,7 +39,7 @@ class RecipeAdapter extends TypeAdapter<Recipe> {
       ..writeByte(2)
       ..write(obj.energy)
       ..writeByte(4)
-      ..write(obj.imageUrl)
+      ..write(obj.imagePath)
       ..writeByte(5)
       ..write(obj.description);
   }

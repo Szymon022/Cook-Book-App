@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cook_book_app/home/bloc/home_page_cubit.dart';
 import 'package:cook_book_app/navigation/router_cubit.dart';
 import 'package:cook_book_app/storage/recipe_repository.dart';
@@ -79,7 +81,15 @@ class _RecipeItem extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                _recipePhoto(),
+                ClipRRect(
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(4)),
+                  child: Container(
+                    width: double.infinity,
+                    color: Colors.black,
+                    child: _recipePhoto(),
+                  ),
+                ),
                 Container(
                   padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
                   child: _recipeHeader(),
@@ -93,13 +103,11 @@ class _RecipeItem extends StatelessWidget {
   }
 
   Widget _recipePhoto() {
-    return ClipRRect(
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
-      child: Image(
-        image: NetworkImage(recipe.imageUrl),
-        height: 300,
-        alignment: Alignment.topCenter,
-      ),
+    return Image.file(
+      File(recipe.imagePath),
+      height: 300,
+      fit: BoxFit.contain,
+      alignment: Alignment.center,
     );
   }
 
