@@ -21,8 +21,8 @@ class HomePageCubit extends Cubit<HomePageViewState> {
 
   void editRecipe(Recipe recipe) => _routerCubit.navigateToEditRecipe(recipe);
 
-  void loadRecipes() {
-    final List<Recipe> recipes = _recipeRepository.getAllRecipes();
+  void loadRecipes([String? query]) {
+    final List<Recipe> recipes = _recipeRepository.getAllRecipes(query);
     emit(HomePageViewState(recipes));
   }
 }
