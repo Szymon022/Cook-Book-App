@@ -17,6 +17,7 @@ void main() {
     StubRecipe(id: "2"),
     StubRecipe(id: "3")
   ];
+  String query = 'recipe';
   when(() => recipeRepository.getAllRecipes()).thenAnswer((_) => recipes);
 
   blocTest(
@@ -75,8 +76,34 @@ void main() {
     setUp: () => clearInteractions(recipeRepository),
     build: () => HomePageCubit(routerCubit, recipeRepository),
     expect: () => [],
-    verify: (cubit) {
+    verify: (_) {
       verify(() => recipeRepository.getAllRecipes()).called(1);
+    },
+  );
+
+  blocTest(
+    'emits HomePageViewState on loadRecipes with properly filtered Recipes when query is provided',
+    setUp: () {
+      clearInteractions(recipeRepository);
+      when(() => recipeRepository.getAllRecipes(query))
+          .thenAnswer((_) => recipes.sublist(1));
+    },
+    build: () => HomePageCubit(routerCubit, recipeRepository),
+    act: (cubit) => cubit.loadRecipes(query),
+    expect: () => [HomePageViewState(recipes.sublist(1))],
+  );
+
+  blocTest(
+    'calls getAllRecipes(query) on loadRecipes when query is provided',
+    setUp: () {
+      clearInteractions(recipeRepository);
+      when(() => recipeRepository.getAllRecipes(query))
+          .thenAnswer((_) => recipes.sublist(1));
+    },
+    build: () => HomePageCubit(routerCubit, recipeRepository),
+    act: (cubit) => cubit.loadRecipes(query),
+    verify: (_) {
+      verify(() => recipeRepository.getAllRecipes(query)).called(1);
     },
   );
 }
