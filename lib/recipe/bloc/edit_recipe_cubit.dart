@@ -10,7 +10,7 @@ class EditRecipeCubit extends Cubit<EditRecipeViewState> {
       Recipe? recipe)
       : _routerCubit = routerCubit,
         _recipeRepository = recipeRepository,
-        super(EditRecipeViewState(recipe));
+        super(ShouldNotShowCamera());
 
   final RouterCubit _routerCubit;
   final RecipeRepository _recipeRepository;
@@ -25,5 +25,16 @@ class EditRecipeCubit extends Cubit<EditRecipeViewState> {
     goBack();
   }
 
-  void goBack() => _routerCubit.popExtra();
+  void onTakingPictureStarted() {
+    emit(ShouldShowCamera());
+  }
+
+  void onTakingPictureFinished() {
+    emit(ShouldNotShowCamera());
+  }
+
+  void goBack() {
+    onTakingPictureFinished();
+    _routerCubit.popExtra();
+  }
 }

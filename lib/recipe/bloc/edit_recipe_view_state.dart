@@ -1,14 +1,7 @@
 import 'dart:core';
 
-import '../../storage/entity/recipe.dart';
+abstract class EditRecipeViewState {}
 
-class EditRecipeViewState {
-  EditRecipeViewState(Recipe? recipe)
-      : _recipeName = recipe?.name,
-        _recipeTime = recipe?.time,
-        _energy = recipe?.energy;
+class ShouldShowCamera extends EditRecipeViewState {}
 
-  String? _recipeName;
-  String? _recipeTime;
-  String? _energy;
-}
+class ShouldNotShowCamera extends EditRecipeViewState {}
