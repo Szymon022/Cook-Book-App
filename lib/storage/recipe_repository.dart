@@ -3,7 +3,7 @@ import 'package:cook_book_app/storage/cook_book_hive.dart';
 import 'entity/recipe.dart';
 
 abstract class RecipeRepository {
-  List<Recipe> getAllRecipes();
+  List<Recipe> getAllRecipes([String? query]);
 
   void saveRecipe(Recipe recipe);
 
@@ -14,8 +14,19 @@ abstract class RecipeRepository {
 
 class RecipeRepositoryImpl implements RecipeRepository {
   @override
-  List<Recipe> getAllRecipes() {
-    return CookBookHive.recipesBox.values.toList().cast<Recipe>();
+  List<Recipe> getAllRecipes([String? query]) {
+    List<Recipe> recipes =
+        CookBookHive.recipesBox.values.toList().cast<Recipe>();
+    if (query != null) {
+      return recipes.mapNotNull((recipe) {
+        if (recipe.name.toLowerCase().contains(query.toLowerCase()) ||
+            recipe.description.toLowerCase().contains(query.toLowerCase())) {
+          return recipe;
+        }
+        return null;
+      });
+    }
+    return recipes;
   }
 
   @override
@@ -31,5 +42,16 @@ class RecipeRepositoryImpl implements RecipeRepository {
   @override
   void deleteRecipe(String uuid) {
     CookBookHive.recipesBox.delete(uuid);
+  }
+}
+
+extension Mappings on Iterable<Recipe> {
+  List<Recipe> mapNotNull(Recipe? Function(Recipe) transform) {
+    List<Recipe> result = [];
+    forEach((element) {
+      Recipe? recipe = transform(element);
+      if (recipe != null) result.add(recipe);
+    });
+    return result;
   }
 }
