@@ -17,7 +17,7 @@ class EditRecipePage extends StatelessWidget {
     _recipeName = recipe?.name ?? "";
     _preparationTime = recipe?.time ?? "";
     _energy = recipe?.energy ?? "";
-    _imagePath = recipe?.imageUrl ?? "";
+    _imagePath = recipe?.imagePath ?? "";
     _description = recipe?.description ?? "";
   }
 

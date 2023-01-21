@@ -104,7 +104,7 @@ class _RecipeItem extends StatelessWidget {
 
   Widget _recipePhoto() {
     return Image.file(
-      File(recipe.imageUrl),
+      File(recipe.imagePath),
       height: 300,
       fit: BoxFit.contain,
       alignment: Alignment.center,
