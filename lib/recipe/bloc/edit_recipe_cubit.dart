@@ -6,11 +6,8 @@ import '../../storage/entity/recipe.dart';
 import 'edit_recipe_view_state.dart';
 
 class EditRecipeCubit extends Cubit<EditRecipeViewState> {
-  EditRecipeCubit(RouterCubit routerCubit, RecipeRepository recipeRepository,
-      Recipe? recipe)
-      : _routerCubit = routerCubit,
-        _recipeRepository = recipeRepository,
-        super(ShouldNotShowCamera());
+  EditRecipeCubit(this._routerCubit, this._recipeRepository)
+      : super(ShouldNotShowCamera());
 
   final RouterCubit _routerCubit;
   final RecipeRepository _recipeRepository;

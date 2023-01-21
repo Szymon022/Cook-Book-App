@@ -33,9 +33,9 @@ class EditRecipePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RouterCubit routerCubit = context.read<RouterCubit>();
+    RecipeRepository recipeRepository = RecipeRepositoryImpl();
     return BlocProvider(
-      create: (context) =>
-          EditRecipeCubit(routerCubit, RecipeRepositoryImpl(), recipe),
+      create: (context) => EditRecipeCubit(routerCubit, recipeRepository),
       child: BlocBuilder<EditRecipeCubit, EditRecipeViewState>(
         builder: (context, state) => Scaffold(
           appBar: _appBar(context, state),
@@ -88,9 +88,10 @@ class EditRecipePage extends StatelessWidget {
         ),
       );
     } else {
+      EditRecipeCubit cubit = BlocProvider.of<EditRecipeCubit>(context);
       return CameraScreen(onTakePhoto: (file) {
         _imagePath = file.path;
-        BlocProvider.of<EditRecipeCubit>(context).onTakingPictureFinished();
+        cubit.onTakingPictureFinished();
       });
     }
   }
