@@ -64,7 +64,7 @@ class RecipePage extends StatelessWidget {
         width: double.infinity,
         color: Colors.black,
         child: Image.file(
-          File(recipe.imageUrl),
+          File(recipe.imagePath),
           height: 300,
           fit: BoxFit.contain,
         ),
