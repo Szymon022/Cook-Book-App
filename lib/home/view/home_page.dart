@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cook_book_app/home/bloc/home_page_cubit.dart';
+import 'package:cook_book_app/home/view/debouncer.dart';
 import 'package:cook_book_app/navigation/router_cubit.dart';
 import 'package:cook_book_app/storage/recipe_repository.dart';
 import 'package:flutter/material.dart';
@@ -16,14 +17,18 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final RouterCubit routerCubit = context.read<RouterCubit>();
     final RecipeRepository recipeRepository = RecipeRepositoryImpl();
+    var shouldReloadRecipesList = true;
     return BlocProvider(
       create: (context) => HomePageCubit(routerCubit, recipeRepository),
       child: BlocBuilder<HomePageCubit, HomePageViewState>(
         builder: (context, state) {
-          // I guess this is really bad, but cannot find another way to load new recipes
-          BlocProvider.of<HomePageCubit>(context).loadRecipes();
+          // I guess this is really bad approach because of poor navigation handling
+          if (shouldReloadRecipesList) {
+            BlocProvider.of<HomePageCubit>(context).loadRecipes();
+            shouldReloadRecipesList = !shouldReloadRecipesList;
+          }
           return Scaffold(
-            appBar: _homeAppBar(),
+            appBar: _homeAppBar(context),
             body: Column(
               children: [
                 _homeContent(state.recipes),
@@ -39,8 +44,37 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  AppBar _homeAppBar() {
-    return AppBar();
+  AppBar _homeAppBar(BuildContext context) {
+    Debouncer searchBarDebouncer = Debouncer(milliseconds: 300);
+    return AppBar(
+      title: Row(
+        children: <Widget>[
+          const Icon(Icons.search),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: TextField(
+                decoration: const InputDecoration(
+                  hintText: 'Search',
+                  border: InputBorder.none,
+                ),
+                onChanged: (query) {
+                  searchBarDebouncer.run(() =>
+                      BlocProvider.of<HomePageCubit>(context)
+                          .loadRecipes(query));
+                },
+                autocorrect: false,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _homeContent(List<Recipe> recipes) {
