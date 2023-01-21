@@ -7,11 +7,17 @@ class RecipePageViewState extends Equatable {
 
   final Recipe recipe;
 
+  String get uuid => recipe.uuid;
+
   String get recipeName => recipe.name;
 
   String get preparationTime => recipe.time;
 
   String get energy => recipe.energy;
+
+  String get description => recipe.description;
+
+  String get imagePath => recipe.imagePath;
 
   @override
   List<Object> get props => [recipe];
