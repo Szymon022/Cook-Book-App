@@ -17,7 +17,7 @@ void main() {
         clearInteractions(routerCubit);
         clearInteractions(recipeRepository);
       },
-      build: () => EditRecipeCubit(routerCubit, recipeRepository, recipe),
+      build: () => EditRecipeCubit(routerCubit, recipeRepository),
       act: (cubit) => cubit.goBack(),
       verify: (_) {
         verify(() => routerCubit.popExtra()).called(1);
@@ -28,7 +28,7 @@ void main() {
         clearInteractions(routerCubit);
         clearInteractions(recipeRepository);
       },
-      build: () => EditRecipeCubit(routerCubit, recipeRepository, recipe),
+      build: () => EditRecipeCubit(routerCubit, recipeRepository),
       act: (cubit) => cubit.goBack(),
       expect: () => [ShouldNotShowCamera()]);
 
@@ -37,7 +37,7 @@ void main() {
         clearInteractions(routerCubit);
         clearInteractions(recipeRepository);
       },
-      build: () => EditRecipeCubit(routerCubit, recipeRepository, recipe),
+      build: () => EditRecipeCubit(routerCubit, recipeRepository),
       act: (cubit) => cubit.saveRecipe(recipe),
       verify: (_) {
         verify(() => routerCubit.popExtra()).called(1);
@@ -48,7 +48,7 @@ void main() {
         clearInteractions(routerCubit);
         clearInteractions(recipeRepository);
       },
-      build: () => EditRecipeCubit(routerCubit, recipeRepository, recipe),
+      build: () => EditRecipeCubit(routerCubit, recipeRepository),
       act: (cubit) => cubit.saveRecipe(recipe),
       verify: (_) {
         verify(() => recipeRepository.saveRecipe(recipe)).called(1);
@@ -59,7 +59,7 @@ void main() {
         clearInteractions(routerCubit);
         clearInteractions(recipeRepository);
       },
-      build: () => EditRecipeCubit(routerCubit, recipeRepository, recipe),
+      build: () => EditRecipeCubit(routerCubit, recipeRepository),
       act: (cubit) => cubit.saveRecipe(recipe),
       expect: () => [ShouldNotShowCamera()]);
 
@@ -68,7 +68,7 @@ void main() {
         clearInteractions(routerCubit);
         clearInteractions(recipeRepository);
       },
-      build: () => EditRecipeCubit(routerCubit, recipeRepository, recipe),
+      build: () => EditRecipeCubit(routerCubit, recipeRepository),
       act: (cubit) => cubit.updateRecipe(recipe),
       verify: (_) {
         verify(() => routerCubit.popExtra()).called(1);
@@ -79,7 +79,7 @@ void main() {
         clearInteractions(routerCubit);
         clearInteractions(recipeRepository);
       },
-      build: () => EditRecipeCubit(routerCubit, recipeRepository, recipe),
+      build: () => EditRecipeCubit(routerCubit, recipeRepository),
       act: (cubit) => cubit.updateRecipe(recipe),
       verify: (_) {
         verify(() => recipeRepository.updateRecipe(recipe.uuid, recipe))
@@ -91,7 +91,7 @@ void main() {
         clearInteractions(routerCubit);
         clearInteractions(recipeRepository);
       },
-      build: () => EditRecipeCubit(routerCubit, recipeRepository, recipe),
+      build: () => EditRecipeCubit(routerCubit, recipeRepository),
       act: (cubit) => cubit.saveRecipe(recipe),
       expect: () => [ShouldNotShowCamera()]);
 
@@ -100,7 +100,7 @@ void main() {
         clearInteractions(routerCubit);
         clearInteractions(recipeRepository);
       },
-      build: () => EditRecipeCubit(routerCubit, recipeRepository, recipe),
+      build: () => EditRecipeCubit(routerCubit, recipeRepository),
       act: (cubit) => cubit.onTakingPictureStarted(),
       expect: () => [ShouldShowCamera()]);
 }
