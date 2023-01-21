@@ -4,7 +4,7 @@ import 'package:cook_book_app/recipe/bloc/edit_recipe_view_state.dart';
 import 'package:cook_book_app/storage/entity/recipe.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../../mock/mock_router_cubit.dart';
+import '../../mock/mocks.dart';
 import '../../utils/stub_recipe.dart';
 
 void main() {
