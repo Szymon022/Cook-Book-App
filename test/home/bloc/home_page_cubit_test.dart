@@ -6,16 +6,16 @@ import 'package:cook_book_app/storage/entity/recipe.dart';
 import 'package:cook_book_app/storage/recipe_repository.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../../mock/mock_router_cubit.dart';
+import '../../mock/mocks.dart';
+import '../../utils/stub_recipe.dart';
 
 void main() {
-  Recipe recipe = const Recipe("Recipe 1", '30 min', '100 kcal');
   RouterCubit routerCubit = MockRouterCubit();
   RecipeRepository recipeRepository = MockRecipeRepository();
-  List<Recipe> recipes = const [
-    Recipe("Recipe 1", "10min", "100 kcals"),
-    Recipe("Recipe 2", "20min", "200 kcals"),
-    Recipe("Recipe 3", "30min", "300 kcals"),
+  List<Recipe> recipes = [
+    StubRecipe(id: "1"),
+    StubRecipe(id: "2"),
+    StubRecipe(id: "3")
   ];
   when(() => recipeRepository.getAllRecipes()).thenAnswer((_) => recipes);
 
@@ -23,9 +23,10 @@ void main() {
     'calls RouterCubit navigateToRecipe on goToRecipe',
     setUp: () => clearInteractions(recipeRepository),
     build: () => HomePageCubit(routerCubit, recipeRepository),
-    act: (cubit) => cubit.goToRecipe(recipe),
+    act: (cubit) => cubit.goToRecipe(recipes[0]),
     expect: () => [],
-    verify: (_) => verify(() => routerCubit.navigateToRecipe(recipe)).called(1),
+    verify: (_) =>
+        verify(() => routerCubit.navigateToRecipe(recipes[0])).called(1),
   );
 
   blocTest(
@@ -41,10 +42,10 @@ void main() {
     'calls RouterCubit navigateToEditRecipe on editRecipe',
     setUp: () => clearInteractions(recipeRepository),
     build: () => HomePageCubit(routerCubit, recipeRepository),
-    act: (cubit) => cubit.editRecipe(recipe),
+    act: (cubit) => cubit.editRecipe(recipes[0]),
     expect: () => [],
     verify: (_) =>
-        verify(() => routerCubit.navigateToEditRecipe(recipe)).called(1),
+        verify(() => routerCubit.navigateToEditRecipe(recipes[0])).called(1),
   );
 
   blocTest(

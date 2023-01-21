@@ -1,20 +1,37 @@
 import 'package:cook_book_app/navigation/router_cubit.dart';
+import 'package:cook_book_app/storage/recipe_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../storage/entity/recipe.dart';
 import 'edit_recipe_view_state.dart';
 
 class EditRecipeCubit extends Cubit<EditRecipeViewState> {
-  EditRecipeCubit(RouterCubit routerCubit, Recipe? recipe)
-      : _routerCubit = routerCubit,
-        super(EditRecipeViewState(recipe));
+  EditRecipeCubit(this._routerCubit, this._recipeRepository)
+      : super(ShouldNotShowCamera());
 
   final RouterCubit _routerCubit;
+  final RecipeRepository _recipeRepository;
 
   void saveRecipe(Recipe recipe) {
-    // save recipe here
-    _routerCubit.popExtra();
+    _recipeRepository.saveRecipe(recipe);
+    goBack();
   }
 
-  void goBack() => _routerCubit.popExtra();
+  void updateRecipe(Recipe recipe) {
+    _recipeRepository.updateRecipe(recipe.uuid, recipe);
+    goBack();
+  }
+
+  void onTakingPictureStarted() {
+    emit(ShouldShowCamera());
+  }
+
+  void onTakingPictureFinished() {
+    emit(ShouldNotShowCamera());
+  }
+
+  void goBack() {
+    onTakingPictureFinished();
+    _routerCubit.popExtra();
+  }
 }

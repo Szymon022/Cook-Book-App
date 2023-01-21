@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cook_book_app/home/bloc/home_page_cubit.dart';
 import 'package:cook_book_app/navigation/router_cubit.dart';
 import 'package:cook_book_app/storage/recipe_repository.dart';
@@ -17,18 +19,22 @@ class HomePage extends StatelessWidget {
     return BlocProvider(
       create: (context) => HomePageCubit(routerCubit, recipeRepository),
       child: BlocBuilder<HomePageCubit, HomePageViewState>(
-        builder: (context, state) => Scaffold(
-          appBar: _homeAppBar(),
-          body: Column(
-            children: [
-              _homeContent(state.recipes),
-            ],
-          ),
-          floatingActionButton: FloatingActionButton(
-            child: const Icon(Icons.add),
-            onPressed: () => context.read<HomePageCubit>().createNewRecipe(),
-          ),
-        ),
+        builder: (context, state) {
+          // I guess this is really bad, but cannot find another way to load new recipes
+          BlocProvider.of<HomePageCubit>(context).loadRecipes();
+          return Scaffold(
+            appBar: _homeAppBar(),
+            body: Column(
+              children: [
+                _homeContent(state.recipes),
+              ],
+            ),
+            floatingActionButton: FloatingActionButton(
+              child: const Icon(Icons.add),
+              onPressed: () => context.read<HomePageCubit>().createNewRecipe(),
+            ),
+          );
+        },
       ),
     );
   }
@@ -63,8 +69,6 @@ class _RecipeItem extends StatelessWidget {
 
   final Recipe recipe;
   final void Function() onRecipeTap;
-  final String burger =
-      'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YnVyZ2VyfGVufDB8fDB8fA%3D%3D&w=1000&q=80';
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +81,15 @@ class _RecipeItem extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                _recipePhoto(),
+                ClipRRect(
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(4)),
+                  child: Container(
+                    width: double.infinity,
+                    color: Colors.black,
+                    child: _recipePhoto(),
+                  ),
+                ),
                 Container(
                   padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
                   child: _recipeHeader(),
@@ -91,13 +103,11 @@ class _RecipeItem extends StatelessWidget {
   }
 
   Widget _recipePhoto() {
-    return ClipRRect(
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
-      child: Image(
-        image: NetworkImage(burger),
-        height: 300,
-        alignment: Alignment.topCenter,
-      ),
+    return Image.file(
+      File(recipe.imagePath),
+      height: 300,
+      fit: BoxFit.contain,
+      alignment: Alignment.center,
     );
   }
 

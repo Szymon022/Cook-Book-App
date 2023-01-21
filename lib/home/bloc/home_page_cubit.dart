@@ -9,13 +9,20 @@ import 'home_page_view_state.dart';
 class HomePageCubit extends Cubit<HomePageViewState> {
   HomePageCubit(RouterCubit routerCubit, RecipeRepository recipeRepository)
       : _routerCubit = routerCubit,
+        _recipeRepository = recipeRepository,
         super(HomePageViewState(recipeRepository.getAllRecipes()));
 
   final RouterCubit _routerCubit;
+  final RecipeRepository _recipeRepository;
 
   void goToRecipe(Recipe recipe) => _routerCubit.navigateToRecipe(recipe);
 
   void createNewRecipe() => _routerCubit.navigateToEditRecipe();
 
   void editRecipe(Recipe recipe) => _routerCubit.navigateToEditRecipe(recipe);
+
+  void loadRecipes() {
+    final List<Recipe> recipes = _recipeRepository.getAllRecipes();
+    emit(HomePageViewState(recipes));
+  }
 }

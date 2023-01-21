@@ -3,17 +3,28 @@ import 'package:cook_book_app/navigation/router_cubit.dart';
 import 'package:cook_book_app/recipe/bloc/recipe_cubit.dart';
 import 'package:cook_book_app/recipe/bloc/recipe_page_view_state.dart';
 import 'package:cook_book_app/storage/entity/recipe.dart';
+import 'package:cook_book_app/storage/files/file_eradicator.dart';
+import 'package:cook_book_app/storage/recipe_repository.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../../mock/mock_router_cubit.dart';
+import '../../mock/mocks.dart';
+import '../../utils/stub_recipe.dart';
 
 void main() {
-  Recipe recipe = const Recipe('Recipe 1', '30 min', '100 kcals');
+  Recipe recipe = StubRecipe();
   RouterCubit routerCubit = MockRouterCubit();
+  RecipeRepository recipeRepository = MockRecipeRepository();
+  FileEradicator fileEradicator = MockFileEradicator();
 
   blocTest(
     'sets RecipePageViewState(recipe) as initial state',
-    build: () => RecipeCubit(routerCubit, recipe),
+    setUp: () {
+      clearInteractions(routerCubit);
+      clearInteractions(recipeRepository);
+      clearInteractions(fileEradicator);
+    },
+    build: () =>
+        RecipeCubit(routerCubit, recipeRepository, fileEradicator, recipe),
     expect: () => [],
     verify: (cubit) {
       cubit.state == RecipePageViewState(recipe);
@@ -22,7 +33,13 @@ void main() {
 
   blocTest(
     'calls RouterCubit navigateToEditRecipe on editRecipe',
-    build: () => RecipeCubit(routerCubit, recipe),
+    setUp: () {
+      clearInteractions(routerCubit);
+      clearInteractions(recipeRepository);
+      clearInteractions(fileEradicator);
+    },
+    build: () =>
+        RecipeCubit(routerCubit, recipeRepository, fileEradicator, recipe),
     act: (cubit) => cubit.editRecipe(),
     expect: () => [],
     verify: (_) =>
@@ -31,9 +48,59 @@ void main() {
 
   blocTest(
     'calls RouterCubit popExtra on goBack',
-    build: () => RecipeCubit(routerCubit, recipe),
+    setUp: () {
+      clearInteractions(routerCubit);
+      clearInteractions(recipeRepository);
+      clearInteractions(fileEradicator);
+    },
+    build: () =>
+        RecipeCubit(routerCubit, recipeRepository, fileEradicator, recipe),
     act: (cubit) => cubit.goBack(),
     expect: () => [],
     verify: (_) => verify(() => routerCubit.popExtra()).called(1),
+  );
+
+  blocTest(
+    'calls RecipeRepository deleteRecipe(uuid) method on deleteRecipe',
+    setUp: () {
+      clearInteractions(routerCubit);
+      clearInteractions(recipeRepository);
+      clearInteractions(fileEradicator);
+    },
+    build: () =>
+        RecipeCubit(routerCubit, recipeRepository, fileEradicator, recipe),
+    act: (cubit) => cubit.deleteRecipe(),
+    expect: () => [],
+    verify: (_) =>
+        verify(() => recipeRepository.deleteRecipe(recipe.uuid)).called(1),
+  );
+
+  blocTest(
+    'calls RouterCubit popExtra on deleteRecipe',
+    setUp: () {
+      clearInteractions(routerCubit);
+      clearInteractions(recipeRepository);
+      clearInteractions(fileEradicator);
+    },
+    build: () =>
+        RecipeCubit(routerCubit, recipeRepository, fileEradicator, recipe),
+    act: (cubit) => cubit.deleteRecipe(),
+    expect: () => [],
+    verify: (_) => verify(() => routerCubit.popExtra()).called(1),
+  );
+
+  blocTest(
+    'calls FileEradicator eradicator on deleteRecipe',
+    setUp: () {
+      clearInteractions(routerCubit);
+      clearInteractions(recipeRepository);
+      clearInteractions(fileEradicator);
+    },
+    build: () =>
+        RecipeCubit(routerCubit, recipeRepository, fileEradicator, recipe),
+    act: (cubit) => cubit.deleteRecipe(),
+    expect: () => [],
+    verify: (_) =>
+        verify(() => fileEradicator.eradicate(recipe.imagePath)).called(1),
   );
 }

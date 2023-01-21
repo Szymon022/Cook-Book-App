@@ -1,14 +1,15 @@
 import 'dart:core';
 
-import '../../storage/entity/recipe.dart';
+import 'package:equatable/equatable.dart';
 
-class EditRecipeViewState {
-  EditRecipeViewState(Recipe? recipe)
-      : _recipeName = recipe?.name,
-        _recipeTime = recipe?.time,
-        _energy = recipe?.energy;
+abstract class EditRecipeViewState extends Equatable {}
 
-  String? _recipeName;
-  String? _recipeTime;
-  String? _energy;
+class ShouldShowCamera extends EditRecipeViewState {
+  @override
+  List<Object?> get props => [];
+}
+
+class ShouldNotShowCamera extends EditRecipeViewState {
+  @override
+  List<Object?> get props => [];
 }
