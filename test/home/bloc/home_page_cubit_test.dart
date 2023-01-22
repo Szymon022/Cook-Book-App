@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:cook_book_app/home/bloc/home_page_cubit.dart';
 import 'package:cook_book_app/home/bloc/home_page_view_state.dart';
@@ -12,6 +14,7 @@ import '../../utils/stub_recipe.dart';
 void main() {
   RouterCubit routerCubit = MockRouterCubit();
   RecipeRepository recipeRepository = MockRecipeRepository();
+  Random random = MockRandom();
   List<Recipe> recipes = [
     StubRecipe(id: "1"),
     StubRecipe(id: "2"),
@@ -104,6 +107,49 @@ void main() {
     act: (cubit) => cubit.loadRecipes(query),
     verify: (_) {
       verify(() => recipeRepository.getAllRecipes(query)).called(1);
+    },
+  );
+
+  blocTest(
+    'calls getAllRecipes on surpriseMe',
+    build: () => HomePageCubit(routerCubit, recipeRepository),
+    act: (cubit) {
+      clearInteractions(recipeRepository);
+      cubit.surpriseMe();
+    },
+    verify: (_) {
+      verify(() => recipeRepository.getAllRecipes()).called(1);
+    },
+  );
+
+  blocTest(
+    'calls nextInt to get random recipe index',
+    setUp: () {
+      clearInteractions(random);
+      when(() => random.nextInt(recipes.length)).thenReturn(recipes.length - 1);
+    },
+    build: () => HomePageCubit(routerCubit, recipeRepository, random),
+    act: (cubit) {
+      cubit.surpriseMe();
+    },
+    verify: (_) {
+      verify(() => random.nextInt(recipes.length)).called(1);
+    },
+  );
+
+  blocTest(
+    'calls navigateToRecipe with recipe at random index',
+    setUp: () {
+      clearInteractions(routerCubit);
+      when(() => random.nextInt(recipes.length)).thenReturn(recipes.length - 1);
+    },
+    build: () => HomePageCubit(routerCubit, recipeRepository, random),
+    act: (cubit) {
+      cubit.surpriseMe();
+    },
+    verify: (_) {
+      verify(() => routerCubit.navigateToRecipe(recipes[recipes.length - 1]))
+          .called(1);
     },
   );
 }

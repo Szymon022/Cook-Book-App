@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:cook_book_app/navigation/router_cubit.dart';
 import 'package:cook_book_app/navigation/router_state.dart';
@@ -10,3 +12,5 @@ class MockRouterCubit extends MockCubit<RouterState> implements RouterCubit {}
 class MockRecipeRepository extends Mock implements RecipeRepository {}
 
 class MockFileEradicator extends Mock implements FileEradicator {}
+
+class MockRandom extends Mock implements Random {}
