@@ -129,21 +129,71 @@ class RecipePage extends StatelessWidget {
       child: Column(
         children: [
           const SizedBox(height: 8),
-          Text(
-            state.recipeName,
-            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 36),
-          ),
+          _recipeName(state.recipeName),
           const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(state.preparationTime, style: const TextStyle(fontSize: 24)),
-              const SizedBox(width: 16),
-              Text(state.energy, style: const TextStyle(fontSize: 24))
-            ],
-          ),
+          _timeAndCaloriesRow(state.preparationTime, state.energy),
+          const SizedBox(height: 8),
+          Container(height: 1, color: Colors.black),
+          const SizedBox(height: 16),
+          Align(
+            alignment: Alignment.topLeft,
+            child: _description(state.description),
+          )
         ],
       ),
+    );
+  }
+
+  Widget _recipeName(String name) {
+    return Text(
+      name,
+      style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 28),
+      softWrap: true,
+      textAlign: TextAlign.center,
+    );
+  }
+
+  Widget _timeAndCaloriesRow(String prepTime, String calories) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Text(
+          'Cooking time: $prepTime',
+          style: const TextStyle(fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(width: 16),
+        Text(
+          'Calories: $calories',
+          style: const TextStyle(fontWeight: FontWeight.w600),
+        ),
+      ],
+    );
+  }
+
+  Widget _description(String description) {
+    List<Widget> divider = [];
+    if (description.isNotEmpty) {
+      divider = [
+        const SizedBox(height: 16),
+        Container(height: 1, color: Colors.black),
+      ];
+    }
+    return Column(
+      children: [
+        Row(children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                description,
+                style: const TextStyle(fontSize: 16),
+                softWrap: true,
+              ),
+            ),
+          ),
+        ]),
+        ...divider,
+      ],
     );
   }
 }

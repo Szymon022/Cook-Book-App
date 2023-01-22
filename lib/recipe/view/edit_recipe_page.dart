@@ -70,11 +70,23 @@ class EditRecipePage extends StatelessWidget {
               bool areFormsValid = _formKey.currentState!.validate();
               if (!areFormsValid) return;
               if (recipe != null) {
-                cubit.updateRecipe(Recipe(recipe!.uuid, _recipeName,
-                    _preparationTime, _calories, _imagePath, _description));
+                cubit.updateRecipe(Recipe(
+                  recipe!.uuid,
+                  _recipeName.trim(),
+                  _preparationTime.trim(),
+                  _calories.trim(),
+                  _imagePath,
+                  _description.trim(),
+                ));
               } else {
-                cubit.saveRecipe(Recipe(_uuid, _recipeName, _preparationTime,
-                    _calories, _imagePath, _description));
+                cubit.saveRecipe(Recipe(
+                  _uuid,
+                  _recipeName.trim(),
+                  _preparationTime.trim(),
+                  _calories.trim(),
+                  _imagePath,
+                  _description.trim(),
+                ));
               }
             },
             icon: const Icon(Icons.check),
