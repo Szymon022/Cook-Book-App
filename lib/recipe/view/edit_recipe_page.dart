@@ -62,18 +62,43 @@ class EditRecipePage extends StatelessWidget {
         if (state is ShouldNotShowCamera)
           IconButton(
             onPressed: () {
-              // if (recipe != null) {
-              //   cubit.updateRecipe(Recipe(recipe!.uuid, _recipeName,
-              //       _preparationTime, _energy, _imagePath, _description));
-              // } else {
-              //   cubit.saveRecipe(Recipe(_uuid, _recipeName, _preparationTime,
-              //       _energy, _imagePath, _description));
-              // }
-              _formKey.currentState!.validate();
+              bool isImageValid = _imagePath.isNotEmpty;
+              if (!isImageValid) {
+                _showInvalidImageDialog(context);
+                return;
+              }
+              bool areFormsValid = _formKey.currentState!.validate();
+              if (!areFormsValid) return;
+              if (recipe != null) {
+                cubit.updateRecipe(Recipe(recipe!.uuid, _recipeName,
+                    _preparationTime, _energy, _imagePath, _description));
+              } else {
+                cubit.saveRecipe(Recipe(_uuid, _recipeName, _preparationTime,
+                    _energy, _imagePath, _description));
+              }
             },
             icon: const Icon(Icons.check),
           ),
       ],
+    );
+  }
+
+  Future<void> _showInvalidImageDialog(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Error'),
+          content: const Text(
+              'We\'ve run into problems. Please check if recipe has photo assigned and if data in forms is valid.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Ok'),
+            ),
+          ],
+        );
+      },
     );
   }
 
