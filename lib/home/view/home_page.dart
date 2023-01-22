@@ -30,13 +30,11 @@ class HomePage extends StatelessWidget {
           return Scaffold(
             appBar: _homeAppBar(context),
             body: Column(
-              children: [
-                _homeContent(state.recipes),
-              ],
-            ),
+                children: [Expanded(child: _homeContent(state.recipes))]),
             floatingActionButton: FloatingActionButton(
+              onPressed:
+                  BlocProvider.of<HomePageCubit>(context).createNewRecipe,
               child: const Icon(Icons.add),
-              onPressed: () => context.read<HomePageCubit>().createNewRecipe(),
             ),
           );
         },
@@ -49,8 +47,6 @@ class HomePage extends StatelessWidget {
     return AppBar(
       title: Row(
         children: <Widget>[
-          const Icon(Icons.search),
-          const SizedBox(width: 8),
           Expanded(
             child: Container(
               decoration: BoxDecoration(
@@ -78,22 +74,20 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _homeContent(List<Recipe> recipes) {
-    return Expanded(
-      child: ListView.builder(
-        itemCount: recipes.length + 1,
-        itemBuilder: (context, index) {
-          if (index == recipes.length) {
-            return const SizedBox(height: 80);
-          } else {
-            Recipe recipe = recipes[index];
-            return _RecipeItem(
-              recipe: recipe,
-              onRecipeTap: () =>
-                  context.read<HomePageCubit>().goToRecipe(recipe),
-            );
-          }
-        },
-      ),
+    return ListView.builder(
+      itemCount: recipes.length + 1,
+      itemBuilder: (context, index) {
+        if (index == recipes.length) {
+          return const SizedBox(height: 80);
+        } else {
+          Recipe recipe = recipes[index];
+          return _RecipeItem(
+            recipe: recipe,
+            onRecipeTap: (recipe) =>
+                context.read<HomePageCubit>().goToRecipe(recipe),
+          );
+        }
+      },
     );
   }
 }
@@ -102,12 +96,12 @@ class _RecipeItem extends StatelessWidget {
   const _RecipeItem({required this.recipe, required this.onRecipeTap});
 
   final Recipe recipe;
-  final void Function() onRecipeTap;
+  final void Function(Recipe recipe) onRecipeTap;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onRecipeTap,
+      onTap: () => onRecipeTap(recipe),
       child: Center(
         child: Card(
           elevation: 4,
@@ -148,46 +142,35 @@ class _RecipeItem extends StatelessWidget {
   Widget _recipeHeader() {
     return Column(
       children: [
-        _recipeTitleRow(),
-        const SizedBox(height: 4),
-        _recipeTagsRow(),
+        _title(recipe.name),
+        const SizedBox(height: 8),
+        _prepTimeAndCaloriesRow(recipe.time, recipe.energy),
       ],
     );
   }
 
-  Widget _recipeTitleRow() {
+  Widget _title(String title) {
+    return Text(
+      title,
+      style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 24),
+      textAlign: TextAlign.center,
+      overflow: TextOverflow.clip,
+    );
+  }
+
+  Widget _prepTimeAndCaloriesRow(String prepTime, String calories) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _recipeTitle(recipe.name),
-        _timeIndicator(recipe.time),
-      ],
-    );
-  }
-
-  Widget _recipeTitle(String title) {
-    return Text(
-      title,
-      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 24),
-    );
-  }
-
-  Widget _timeIndicator(String time) {
-    return Row(
-      children: [
-        const Icon(Icons.timer),
-        const SizedBox(width: 4),
-        Text(time),
-      ],
-    );
-  }
-
-  Widget _recipeTagsRow() {
-    return Row(
-      children: const [
-        Text('Dinner'),
-        SizedBox(width: 4),
-        Text('Lunch'),
+        Text(
+          'Cooking time: $prepTime',
+          style: const TextStyle(fontWeight: FontWeight.w500),
+        ),
+        const SizedBox(width: 16),
+        Text(
+          'Calories: $calories',
+          style: const TextStyle(fontWeight: FontWeight.w500),
+        ),
       ],
     );
   }
