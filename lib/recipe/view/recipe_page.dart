@@ -180,14 +180,18 @@ class RecipePage extends StatelessWidget {
     }
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            description,
-            style: const TextStyle(fontSize: 16),
-            softWrap: true,
+        Row(children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                description,
+                style: const TextStyle(fontSize: 16),
+                softWrap: true,
+              ),
+            ),
           ),
-        ),
+        ]),
         ...divider,
       ],
     );
