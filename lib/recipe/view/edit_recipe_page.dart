@@ -16,7 +16,7 @@ class EditRecipePage extends StatelessWidget {
     _uuid = recipe?.uuid ?? const Uuid().v1();
     _recipeName = recipe?.name ?? "";
     _preparationTime = recipe?.time ?? "";
-    _energy = recipe?.energy ?? "";
+    _calories = recipe?.energy ?? "";
     _imagePath = recipe?.imagePath ?? "";
     _description = recipe?.description ?? "";
   }
@@ -25,7 +25,7 @@ class EditRecipePage extends StatelessWidget {
   late String _uuid;
   late String _recipeName;
   late String _preparationTime;
-  late String _energy;
+  late String _calories;
   late String _imagePath;
   late String _description;
   final _formKey = GlobalKey<FormState>();
@@ -62,19 +62,19 @@ class EditRecipePage extends StatelessWidget {
         if (state is ShouldNotShowCamera)
           IconButton(
             onPressed: () {
-              bool isImageValid = _imagePath.isNotEmpty;
-              if (!isImageValid) {
-                _showInvalidImageDialog(context);
+              bool isImageMissing = _imagePath.isNotEmpty;
+              if (!isImageMissing) {
+                _showImageMissingDialog(context);
                 return;
               }
               bool areFormsValid = _formKey.currentState!.validate();
               if (!areFormsValid) return;
               if (recipe != null) {
                 cubit.updateRecipe(Recipe(recipe!.uuid, _recipeName,
-                    _preparationTime, _energy, _imagePath, _description));
+                    _preparationTime, _calories, _imagePath, _description));
               } else {
                 cubit.saveRecipe(Recipe(_uuid, _recipeName, _preparationTime,
-                    _energy, _imagePath, _description));
+                    _calories, _imagePath, _description));
               }
             },
             icon: const Icon(Icons.check),
@@ -83,14 +83,13 @@ class EditRecipePage extends StatelessWidget {
     );
   }
 
-  Future<void> _showInvalidImageDialog(BuildContext context) {
+  Future<void> _showImageMissingDialog(BuildContext context) {
     return showDialog<void>(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text('Error'),
-          content: const Text(
-              'We\'ve run into problems. Please check if recipe has photo assigned and if data in forms is valid.'),
+          content: const Text('Please provide image to the Recipe'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -214,8 +213,8 @@ class EditRecipePage extends StatelessWidget {
         ),
         initialValue: _preparationTime,
         validator: (time) {
-          RegExp timeRegexp = RegExp(r'^[1-9]+[0-9]*(\s)+(min|h)$');
-          if (time == null || !timeRegexp.hasMatch(time)) {
+          RegExp prepTimeRegex = RegExp(r'^[1-9]+[0-9]*(\s)+(min|h)$');
+          if (time == null || !prepTimeRegex.hasMatch(time)) {
             return 'Number + min/h';
           }
           return null;
@@ -227,18 +226,18 @@ class EditRecipePage extends StatelessWidget {
   Widget _energyForm() {
     return Expanded(
       child: TextFormField(
-        onChanged: (energy) {
-          _energy = energy;
+        onChanged: (calories) {
+          _calories = calories;
           _formKey.currentState?.validate();
         },
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
           labelText: "Calories",
         ),
-        initialValue: _energy,
+        initialValue: _calories,
         validator: (energy) {
-          RegExp energyRegexp = RegExp(r'^[1-9]+[0-9]*(\s)+(kcal)$');
-          if (energy == null || !energyRegexp.hasMatch(energy)) {
+          RegExp caloriesRegex = RegExp(r'^[1-9]+[0-9]*(\s)+(kcal)$');
+          if (energy == null || !caloriesRegex.hasMatch(energy)) {
             return 'Number + kcal';
           }
           return null;
