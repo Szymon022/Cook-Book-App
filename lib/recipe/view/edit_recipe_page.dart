@@ -183,7 +183,10 @@ class EditRecipePage extends StatelessWidget {
 
   Widget _titleForm() {
     return TextFormField(
-      onChanged: (name) => _recipeName = name,
+      onChanged: (name) {
+        _recipeName = name;
+        _formKey.currentState?.validate();
+      },
       decoration: const InputDecoration(
         border: OutlineInputBorder(),
         hintText: "Recipe name",
@@ -202,7 +205,10 @@ class EditRecipePage extends StatelessWidget {
   Widget _timeForm() {
     return Expanded(
       child: TextFormField(
-        onChanged: (preparationTime) => _preparationTime = preparationTime,
+        onChanged: (preparationTime) {
+          _preparationTime = preparationTime;
+          _formKey.currentState?.validate();
+        },
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
           hintText: "Prep time",
@@ -222,7 +228,10 @@ class EditRecipePage extends StatelessWidget {
   Widget _energyForm() {
     return Expanded(
       child: TextFormField(
-        onChanged: (energy) => _energy = energy,
+        onChanged: (energy) {
+          _energy = energy;
+          _formKey.currentState?.validate();
+        },
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
           hintText: "Kcal",
