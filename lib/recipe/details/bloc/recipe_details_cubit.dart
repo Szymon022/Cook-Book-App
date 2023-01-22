@@ -1,15 +1,15 @@
 import 'package:bloc/bloc.dart';
 import 'package:cook_book_app/navigation/router_cubit.dart';
-import 'package:cook_book_app/recipe/bloc/recipe_page_view_state.dart';
+import 'package:cook_book_app/recipe/details/bloc/recipe_details_view_state.dart';
 import 'package:cook_book_app/storage/files/file_eradicator.dart';
 import 'package:cook_book_app/storage/recipe_repository.dart';
 
-import '../../storage/entity/recipe.dart';
+import '../../../storage/entity/recipe.dart';
 
-class RecipeCubit extends Cubit<RecipePageViewState> {
-  RecipeCubit(this.routerCubit, this.recipeRepository, this.fileEradicator,
-      Recipe recipe)
-      : super(RecipePageViewState(recipe));
+class RecipeDetailsCubit extends Cubit<RecipeDetailsViewState> {
+  RecipeDetailsCubit(this.routerCubit, this.recipeRepository,
+      this.fileEradicator, Recipe recipe)
+      : super(RecipeDetailsViewState(recipe));
 
   final RouterCubit routerCubit;
   final RecipeRepository recipeRepository;

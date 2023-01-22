@@ -1,19 +1,19 @@
 import 'dart:io';
 
 import 'package:cook_book_app/navigation/router_cubit.dart';
-import 'package:cook_book_app/recipe/bloc/recipe_cubit.dart';
-import 'package:cook_book_app/recipe/bloc/recipe_page_view_state.dart';
+import 'package:cook_book_app/recipe/details/bloc/recipe_details_cubit.dart';
 import 'package:cook_book_app/storage/files/file_eradicator.dart';
 import 'package:cook_book_app/storage/recipe_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../storage/entity/recipe.dart';
+import '../../../storage/entity/recipe.dart';
+import '../bloc/recipe_details_view_state.dart';
 
 enum RecipeAction { edit, delete }
 
-class RecipePage extends StatelessWidget {
-  const RecipePage(this.recipe, {Key? key}) : super(key: key);
+class RecipeDetailsPage extends StatelessWidget {
+  const RecipeDetailsPage(this.recipe, {Key? key}) : super(key: key);
 
   final Recipe recipe;
 
@@ -24,8 +24,8 @@ class RecipePage extends StatelessWidget {
     FileEradicator eradicator = FileEradicatorImpl();
     return BlocProvider(
       create: (context) =>
-          RecipeCubit(routerCubit, recipeRepository, eradicator, recipe),
-      child: BlocBuilder<RecipeCubit, RecipePageViewState>(
+          RecipeDetailsCubit(routerCubit, recipeRepository, eradicator, recipe),
+      child: BlocBuilder<RecipeDetailsCubit, RecipeDetailsViewState>(
         builder: (context, state) => Scaffold(
           appBar: _appBar(context),
           body: _content(state),
@@ -35,7 +35,7 @@ class RecipePage extends StatelessWidget {
   }
 
   PreferredSizeWidget _appBar(BuildContext context) {
-    var cubit = BlocProvider.of<RecipeCubit>(context);
+    var cubit = BlocProvider.of<RecipeDetailsCubit>(context);
     return AppBar(
       leading: IconButton(
         onPressed: cubit.goBack,
@@ -68,7 +68,7 @@ class RecipePage extends StatelessWidget {
   }
 
   Future<void> _deleteRecipeDialog(BuildContext context) async {
-    RecipeCubit cubit = BlocProvider.of<RecipeCubit>(context);
+    RecipeDetailsCubit cubit = BlocProvider.of<RecipeDetailsCubit>(context);
     return showDialog<void>(
         context: context,
         barrierDismissible: false,
@@ -96,7 +96,7 @@ class RecipePage extends StatelessWidget {
         });
   }
 
-  Widget _content(RecipePageViewState state) {
+  Widget _content(RecipeDetailsViewState state) {
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -123,7 +123,7 @@ class RecipePage extends StatelessWidget {
     );
   }
 
-  Widget _recipeInformation(RecipePageViewState state) {
+  Widget _recipeInformation(RecipeDetailsViewState state) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
