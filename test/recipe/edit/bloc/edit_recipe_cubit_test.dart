@@ -1,11 +1,11 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:cook_book_app/recipe/bloc/edit_recipe_cubit.dart';
-import 'package:cook_book_app/recipe/bloc/edit_recipe_view_state.dart';
+import 'package:cook_book_app/recipe/edit/bloc/edit_recipe_cubit.dart';
+import 'package:cook_book_app/recipe/edit/bloc/edit_recipe_view_state.dart';
 import 'package:cook_book_app/storage/entity/recipe.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../../mock/mocks.dart';
-import '../../utils/stub_recipe.dart';
+import '../../../mock/mocks.dart';
+import '../../../utils/stub_recipe.dart';
 
 void main() {
   Recipe recipe = StubRecipe();

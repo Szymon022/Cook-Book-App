@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../storage/entity/recipe.dart';
+import '../../../storage/entity/recipe.dart';
 import '../bloc/edit_recipe_cubit.dart';
 import '../bloc/edit_recipe_view_state.dart';
 

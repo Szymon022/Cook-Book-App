@@ -3,9 +3,9 @@ import 'package:cook_book_app/navigation/router_state.dart';
 import 'package:flutter/material.dart';
 
 import '../home/view/home_page.dart';
-import '../recipe/view/edit_recipe_page.dart';
+import '../recipe/details/view/recipe_details_page.dart';
+import '../recipe/edit/view/edit_recipe_page.dart';
 import '../storage/entity/recipe.dart';
-import '../recipe/view/recipe_page.dart';
 
 class RootRouterDelegate extends RouterDelegate<RouterState> {
   final GlobalKey<NavigatorState> _navigatorKey;
@@ -70,7 +70,7 @@ class RootRouterDelegate extends RouterDelegate<RouterState> {
       return [
         _materialPage(
           valueKey: "recipePage",
-          child: RecipePage(recipe),
+          child: RecipeDetailsPage(recipe),
         ),
       ];
     }
