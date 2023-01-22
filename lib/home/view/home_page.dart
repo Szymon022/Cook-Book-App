@@ -44,6 +44,7 @@ class HomePage extends StatelessWidget {
 
   AppBar _homeAppBar(BuildContext context) {
     Debouncer searchBarDebouncer = Debouncer(milliseconds: 300);
+    HomePageCubit cubit = BlocProvider.of<HomePageCubit>(context);
     return AppBar(
       title: Row(
         children: <Widget>[
@@ -60,9 +61,7 @@ class HomePage extends StatelessWidget {
                   border: InputBorder.none,
                 ),
                 onChanged: (query) {
-                  searchBarDebouncer.run(() =>
-                      BlocProvider.of<HomePageCubit>(context)
-                          .loadRecipes(query));
+                  searchBarDebouncer.run(() => cubit.loadRecipes(query));
                 },
                 autocorrect: false,
               ),
@@ -70,6 +69,13 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
+      actions: [
+        TextButton(
+          onPressed: () => cubit.surpriseMe(),
+          child: const Text('Random', style: TextStyle(color: Colors.white)),
+          // icon: const Icon(Icons.restaurant),
+        ),
+      ],
     );
   }
 
