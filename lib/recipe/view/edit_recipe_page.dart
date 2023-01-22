@@ -16,7 +16,7 @@ class EditRecipePage extends StatelessWidget {
     _uuid = recipe?.uuid ?? const Uuid().v1();
     _recipeName = recipe?.name ?? "";
     _preparationTime = recipe?.time ?? "";
-    _energy = recipe?.energy ?? "";
+    _calories = recipe?.energy ?? "";
     _imagePath = recipe?.imagePath ?? "";
     _description = recipe?.description ?? "";
   }
@@ -25,7 +25,7 @@ class EditRecipePage extends StatelessWidget {
   late String _uuid;
   late String _recipeName;
   late String _preparationTime;
-  late String _energy;
+  late String _calories;
   late String _imagePath;
   late String _description;
   final _formKey = GlobalKey<FormState>();
@@ -62,17 +62,42 @@ class EditRecipePage extends StatelessWidget {
         if (state is ShouldNotShowCamera)
           IconButton(
             onPressed: () {
+              bool isImageMissing = _imagePath.isNotEmpty;
+              if (!isImageMissing) {
+                _showImageMissingDialog(context);
+                return;
+              }
+              bool areFormsValid = _formKey.currentState!.validate();
+              if (!areFormsValid) return;
               if (recipe != null) {
                 cubit.updateRecipe(Recipe(recipe!.uuid, _recipeName,
-                    _preparationTime, _energy, _imagePath, _description));
+                    _preparationTime, _calories, _imagePath, _description));
               } else {
                 cubit.saveRecipe(Recipe(_uuid, _recipeName, _preparationTime,
-                    _energy, _imagePath, _description));
+                    _calories, _imagePath, _description));
               }
             },
             icon: const Icon(Icons.check),
           ),
       ],
+    );
+  }
+
+  Future<void> _showImageMissingDialog(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Error'),
+          content: const Text('Please provide image to the Recipe'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Ok'),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -116,7 +141,6 @@ class EditRecipePage extends StatelessWidget {
       child: InkWell(
         onTap: BlocProvider.of<EditRecipeCubit>(context).onTakingPictureStarted,
         child: Container(
-          padding: const EdgeInsets.only(bottom: 16),
           width: double.infinity,
           height: 300,
           color: Colors.black,
@@ -136,17 +160,18 @@ class EditRecipePage extends StatelessWidget {
         key: _formKey,
         child: Column(
           children: [
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             _titleForm(),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _timeForm(),
                 const SizedBox(width: 16),
                 _energyForm(),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             _descriptionField()
           ],
         ),
@@ -156,24 +181,44 @@ class EditRecipePage extends StatelessWidget {
 
   Widget _titleForm() {
     return TextFormField(
-      onChanged: (name) => _recipeName = name,
+      onChanged: (name) {
+        _recipeName = name;
+        _formKey.currentState?.validate();
+      },
       decoration: const InputDecoration(
         border: OutlineInputBorder(),
-        hintText: "Recipe name",
+        labelText: "Recipe name",
       ),
       initialValue: _recipeName,
+      validator: (title) {
+        RegExp wordsAndSpacesOnlyRegexp = RegExp(r'^[a-zA-Z\s\D]+$');
+        if (title == null || !wordsAndSpacesOnlyRegexp.hasMatch(title)) {
+          return 'Name must contain only words separated by spaces';
+        }
+        return null;
+      },
     );
   }
 
   Widget _timeForm() {
     return Expanded(
       child: TextFormField(
-        onChanged: (preparationTime) => _preparationTime = preparationTime,
+        onChanged: (preparationTime) {
+          _preparationTime = preparationTime;
+          _formKey.currentState?.validate();
+        },
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
-          hintText: "Prep time",
+          labelText: "Preparation time",
         ),
         initialValue: _preparationTime,
+        validator: (time) {
+          RegExp prepTimeRegex = RegExp(r'^[1-9]+[0-9]*(\s)+(min|h)$');
+          if (time == null || !prepTimeRegex.hasMatch(time)) {
+            return 'Number + min/h';
+          }
+          return null;
+        },
       ),
     );
   }
@@ -181,12 +226,22 @@ class EditRecipePage extends StatelessWidget {
   Widget _energyForm() {
     return Expanded(
       child: TextFormField(
-        onChanged: (energy) => _energy = energy,
+        onChanged: (calories) {
+          _calories = calories;
+          _formKey.currentState?.validate();
+        },
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
-          hintText: "Kcals",
+          labelText: "Calories",
         ),
-        initialValue: _energy,
+        initialValue: _calories,
+        validator: (energy) {
+          RegExp caloriesRegex = RegExp(r'^[1-9]+[0-9]*(\s)+(kcal)$');
+          if (energy == null || !caloriesRegex.hasMatch(energy)) {
+            return 'Number + kcal';
+          }
+          return null;
+        },
       ),
     );
   }
@@ -199,7 +254,8 @@ class EditRecipePage extends StatelessWidget {
       maxLines: null,
       decoration: const InputDecoration(
         border: OutlineInputBorder(),
-        hintText: "Description",
+        labelText: "Description",
+        alignLabelWithHint: true,
       ),
       initialValue: _description,
     );
