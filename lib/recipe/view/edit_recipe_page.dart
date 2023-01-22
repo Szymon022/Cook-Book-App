@@ -142,7 +142,6 @@ class EditRecipePage extends StatelessWidget {
       child: InkWell(
         onTap: BlocProvider.of<EditRecipeCubit>(context).onTakingPictureStarted,
         child: Container(
-          padding: const EdgeInsets.only(bottom: 16),
           width: double.infinity,
           height: 300,
           color: Colors.black,
@@ -162,9 +161,9 @@ class EditRecipePage extends StatelessWidget {
         key: _formKey,
         child: Column(
           children: [
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             _titleForm(),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -173,7 +172,7 @@ class EditRecipePage extends StatelessWidget {
                 _energyForm(),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             _descriptionField()
           ],
         ),
@@ -189,7 +188,7 @@ class EditRecipePage extends StatelessWidget {
       },
       decoration: const InputDecoration(
         border: OutlineInputBorder(),
-        hintText: "Recipe name",
+        labelText: "Recipe name",
       ),
       initialValue: _recipeName,
       validator: (title) {
@@ -211,7 +210,7 @@ class EditRecipePage extends StatelessWidget {
         },
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
-          hintText: "Prep time",
+          labelText: "Preparation time",
         ),
         initialValue: _preparationTime,
         validator: (time) {
@@ -234,7 +233,7 @@ class EditRecipePage extends StatelessWidget {
         },
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
-          hintText: "Kcal",
+          labelText: "Calories",
         ),
         initialValue: _energy,
         validator: (energy) {
@@ -256,7 +255,8 @@ class EditRecipePage extends StatelessWidget {
       maxLines: null,
       decoration: const InputDecoration(
         border: OutlineInputBorder(),
-        hintText: "Description",
+        labelText: "Description",
+        alignLabelWithHint: true,
       ),
       initialValue: _description,
     );
